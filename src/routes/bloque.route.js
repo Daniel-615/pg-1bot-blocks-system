@@ -18,7 +18,6 @@ class BloqueRoutes {
 
         this.router.get("/", 
             verifyToken,
-            checkPermisosDesdeRoles(["leer_bloque"]),
             this.controller.get.bind(this.controller)
         );
 

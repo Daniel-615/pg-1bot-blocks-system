@@ -19,7 +19,7 @@ class ExtensionCategoriaController {
             return res
                 .status(200)
                 .json({
-                    ok: result.message,
+                    ok: result.ok,
                     message: result.message,
                     data: result.data
                 })

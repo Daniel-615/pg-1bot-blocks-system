@@ -1,5 +1,7 @@
 const db = require("../models")
 const extensionCategoria = db.getModel("ExtensionCategoria")
+const Extension = db.getModel("Extension")
+const Categoria = db.getModel("Categoria")
 
 class ExtensionCategoriaService {
     async get() {
@@ -43,9 +45,8 @@ class ExtensionCategoriaService {
     }
     async getById(id_extension_categoria) {
         try {
-            const extension_categoria = await ExtensionCategoria.findOne({
-                where: id_extension_categoria,
-                activo: true
+            const extension_categoria = await extensionCategoria.findOne({
+                where: { id_extension_categoria, activo: true }
             })
             if (!extension_categoria) {
                 return {
@@ -102,14 +103,14 @@ class ExtensionCategoriaService {
                     message: "No se encontró la relación extensión-categoria"
                 }
             }
-            const extension = await extension.findByPk(id_extension)
+            const extension = await Extension.findByPk(id_extension)
             if (!extension) {
                 return {
                     ok: false,
                     message: "La extensión no existe"
                 }
             }
-            const categoria = await categoria.findByPk(id_categoria)
+            const categoria = await Categoria.findByPk(id_categoria)
             if (!categoria) {
                 return {
                     ok: false,
@@ -117,7 +118,7 @@ class ExtensionCategoriaService {
                 }
             }
             const new_extension_categoria = await extension_categoria.update({
-                id_extensino: extension.id_extension,
+                id_extension: extension.id_extension,
                 id_categoria: categoria.id_categoria
             })
             if (!new_extension_categoria) {

@@ -12,7 +12,22 @@ class BloqueService {
                 include: [
                     {
                         model: Extension,
-                        as: "extension"
+                        as: "extension",
+                        include: [
+                            {
+                                model: db.getModel("EstadoExtension"),
+                                as: "estado"
+                            },
+                            {
+                                model: db.getModel("Categoria"),
+                                as: "categorias",
+                                through: {
+                                    attributes: [],
+                                    where: { activo: true }
+                                },
+                                required: false
+                            }
+                        ]
                     },
                     {
                         model: EstadoBloque,
@@ -45,9 +60,15 @@ class BloqueService {
                     {
                         model: db.getModel("Placa"),
                         as: "placas",
-                        through: {
-                            attributes: []
-                        }
+                                through: {
+                                    attributes: [
+                                        "codigo_generado",
+                                        "codigo_setup",
+                                        "codigo_loop",
+                                        "librerias_requeridas"
+                                    ],
+                                    where: { activo: true }
+                                }
                     },
                     {
                         model: db.getModel("ConexionBloque"),
@@ -80,7 +101,7 @@ class BloqueService {
     async getById(id_bloque) {
         try {
             const bloque = await Bloque.findOne({
-                where: id_bloque
+                where: { id_bloque }
             })
             if (!bloque) {
                 return {

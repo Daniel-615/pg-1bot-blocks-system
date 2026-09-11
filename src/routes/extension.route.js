@@ -19,7 +19,6 @@ class ExtensionRoutes {
         this.router.get(
             "/",
             verifyToken,
-            checkPermisosDesdeRoles(["leer_extension"]),
             this.controller.get.bind(this.controller)
         )
         this.router.get(
