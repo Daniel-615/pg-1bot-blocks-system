@@ -19,6 +19,8 @@ const placaRoute = require("./src/routes/placa.route.js");
 const tipoBloqueRoute = require("./src/routes/tipo.bloque.route.js");
 const tipoDatoRoute = require("./src/routes/tipo.dato.route.js");
 const tipoConexionRoute = require("./src/routes/tipo.conexion.route.js")
+const storageRoute = require("./src/routes/storage.route.js");
+const ejemploRoute = require("./src/routes/ejemplo.route.js");
 class Server {
   constructor() {
     this.app = express();
@@ -38,7 +40,7 @@ class Server {
     this.app.use(cors({
       origin: FRONTEND_URL,
       credentials: true,
-      methods: ["GET", "POST", "PUT"],
+      methods: ["GET", "POST", "PUT", "DELETE"],
       allowedHeaders: ["Content-Type", "Authorization"],
       exposedHeaders: ["Set-Cookie"]
     }))
@@ -65,11 +67,13 @@ class Server {
     new placaRoute(this.app);
     new tipoBloqueRoute(this.app);
     new tipoConexionRoute(this.app);
-    new tipoDatoRoute(this.app);
+     new tipoDatoRoute(this.app);
+     new storageRoute(this.app);
+     new ejemploRoute(this.app);
   }
   async connectDB() {
     try {
-      await db.sequelize.sync({ alter: true })
+       await db.sequelize.sync({ alter: true })
       console.log("Conexión a la base de datos exitosa");
       const tables = await db.sequelize.getQueryInterface().showAllTables();
       console.log("Tablas en la base de datos:", tables);

@@ -48,6 +48,8 @@ class Database {
         this.models.TipoBloque = require('../models/tipo.bloque.model');
         this.models.TipoConexion = require('../models/tipo.conexion.model');
         this.models.TipoDato = require('../models/tipo.dato.model');
+        this.models.Ejemplo = require('../models/ejemplo.model');
+        this.models.Proyecto = require('../models/proyecto.model');
 
         Object.values(this.models).forEach((model) => {
             model.init(sequelize);
