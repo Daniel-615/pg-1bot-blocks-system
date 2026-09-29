@@ -2,6 +2,7 @@ const { randomUUID } = require('node:crypto');
 const {
   S3Client,
   PutObjectCommand,
+  GetObjectCommand,
 } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const config = require('../config/config');
@@ -18,6 +19,7 @@ function getClient() {
       region: config.S3_REGION,
       endpoint: config.S3_ENDPOINT,
       forcePathStyle: config.S3_FORCE_PATH_STYLE,
+      requestChecksumCalculation: 'WHEN_REQUIRED',
       credentials: config.S3_ACCESS_KEY_ID && config.S3_SECRET_ACCESS_KEY
         ? {
           accessKeyId: config.S3_ACCESS_KEY_ID,
@@ -60,4 +62,17 @@ async function createUploadUrl({ filename, contentType, folder = 'uploads' }) {
   return { key, uploadUrl, publicUrl, expiresIn };
 }
 
-module.exports = { createUploadUrl };
+async function createDownloadUrl(key) {
+  if (!key || typeof key !== 'string') {
+    throw new Error('storage_key no es válido');
+  }
+
+  const expiresIn = 900;
+  return getSignedUrl(
+    getClient(),
+    new GetObjectCommand({ Bucket: config.S3_BUCKET, Key: key }),
+    { expiresIn },
+  );
+}
+
+module.exports = { createUploadUrl, createDownloadUrl };
