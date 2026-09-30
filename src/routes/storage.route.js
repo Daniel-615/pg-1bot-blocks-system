@@ -18,7 +18,7 @@ class StorageRoutes {
         const data = await createUploadUrl({ filename, contentType, folder });
         await db.getModel('Proyecto').create({
           id_usuario: req.user.id,
-          nombre: req.body.projectName || filename.replace(/\.json$/i, ''),
+          nombre: req.body.projectName || String(filename).replace(/\.json$/i, ''),
           placa: req.body.board || 'esp32',
           storage_key: data.key,
         });

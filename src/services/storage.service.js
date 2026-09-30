@@ -40,8 +40,13 @@ function safeFilename(filename) {
 }
 
 async function createUploadUrl({ filename, contentType, folder = 'uploads' }) {
-  if (!contentType || !/^[-\w.+]+\/[-\w.+]+$/.test(contentType)) {
-    throw new Error('contentType no es válido');
+  const originalFilename = String(filename || '').trim();
+  if (!originalFilename.toLowerCase().endsWith('.json')) {
+    throw new Error('Solo se permiten archivos .json');
+  }
+
+  if (contentType !== 'application/json') {
+    throw new Error('contentType debe ser application/json');
   }
 
   const safeFolder = String(folder)
